@@ -10,5 +10,10 @@
         <tr><td><a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td></tr>
       <% } %>
     </table>
+    <form method="get" action="/quizes">
+      <p>Búsqueda de preguntas:</p>
+      <p><input type="search" name="search" value="texto_a_buscar" />
+      <input type="submit" value="Enviar"></p>
+    </form>
   </body>
 </html>

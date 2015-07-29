@@ -12,13 +12,25 @@ exports.load = function(req, res, next, quizId) {
   ).catch(function(error) { next(error);});
 };
 
-// GET /quizes
+// GET /quizes?search=texto_a_buscar
+
 exports.index = function(req, res) {
-  models.Quiz.findAll().then(
-    function(quizes) {
+  var busqueda = (req.query.search || '');
+  busqueda = busqueda.replace(/''/g, '%'); //reemplaza espacios en blanco por %
+
+  if (busqueda){
+    models.Quiz.findAll({
+      where:["lower(pregunta) like lower(?)", '%' + busqueda + '%'], order:'pregunta ASC'}
+      ).then(function(quizes) {
+        res.render('quizes/index', { quizes: quizes });
+      }
+    ).catch(function(error) { next(error);});
+  } else {
+    models.Quiz.findAll().then(function(quizes) {
       res.render('quizes/index', { quizes: quizes });
     }
-  ).catch(function(error) { next(error);})
+    ).catch(function(error) { next(error);});
+  }
 };
 
 // GET /quizes/:id
