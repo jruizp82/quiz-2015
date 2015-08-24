@@ -37,6 +37,16 @@ app.use(function(req, res, next) {
 
   // Hacer visible req.session en las vistas
   res.locals.session = req.session;
+
+  // cerrar sesion
+    if (req.session.user) {
+        if (Date.now() - req.session.user.lastRequestTime > 120*1000) {
+            delete req.session.user;
+        } else {
+            req.session.user.lastRequestTime = Date.now();
+        }
+    }
+
   next();
 });
 
